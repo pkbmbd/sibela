@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Sibela</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary-color: #059669;
+      --primary-hover: #047857;
+      --primary-light: #d1fae5;
+      --success-color: #10b981;
+      --success-bg: #ecfdf5;
+      --bg-color: #f0fdf4;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --danger-color: #ef4444;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+
+    header {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(5, 150, 105, 0.1);
+      padding: 1rem 2rem;
+    }
+    .nav-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.25rem; color: var(--primary-color); }
+    .logo img { height: 38px; width: auto; object-fit: contain; }
+    
+    .user-section { display: flex; align-items: center; gap: 12px; }
+    .user-badge { font-size: 0.875rem; background: var(--primary-light); color: var(--primary-color); padding: 6px 16px; border-radius: 50px; font-weight: 600; }
+    
+    .btn-logout-header {
+      background: #fef2f2; color: var(--danger-color); border: 1px solid #fecaca;
+      padding: 6px 14px; border-radius: 50px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease;
+    }
+    .btn-logout-header:hover { background: var(--danger-color); color: white; border-color: var(--danger-color); }
+
+    .container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; flex: 1; }
+
+    .card {
+      background: var(--card-bg); border-radius: var(--radius); padding: 2.5rem;
+      box-shadow: var(--shadow); border: 1px solid rgba(5, 150, 105, 0.08); margin-bottom: 2rem;
+    }
+    .card-title { font-size: 1.4rem; color: var(--text-main); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .card-title i { color: var(--primary-color); }
+
+    .grid-selection { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+    .select-box {
+      background: #f8fafc; border: 2px solid #e2e8f0; border-radius: var(--radius);
+      padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease;
+    }
+    .select-box:hover { border-color: var(--primary-color); background: var(--primary-light); transform: translateY(-4px); }
+    .select-box i { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .form-group input, .form-group select {
+      width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; transition: all 0.3s ease;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px var(--primary-light); }
+    
+    .error-msg {
+      background-color: #fef2f2; border: 1px solid #fecaca; color: var(--danger-color);
+      padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .alert { padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; margin-bottom: 1.25rem; display: none; }
+    .alert-info { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+
+    .btn {
+      width: 100%; background: var(--primary-color); color: white; padding: 14px;
+      border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer;
+      display: flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.3s ease;
+    }
+    .btn:hover { background: var(--primary-hover); }
+    .btn:disabled { background: #94a3b8; cursor: not-allowed; }
+    .btn-secondary { background: #64748b; margin-top: 10px; }
+    .btn-secondary:hover { background: #475569; }
+
+    /* STRUKTUR ACCORDION PERTEMUAN */
+    .pertemuan-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+    
+    .pertemuan-item {
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    .btn-pertemuan {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 18px 20px;
+      background: #f8fafc;
+      border: none;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+    .btn-pertemuan:hover { background: #f0fdf4; color: var(--primary-hover); }
+
+    .pertemuan-right-side {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* BADGE NILAI PERTEMUAN */
+    .nilai-badge {
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    .nilai-badge.has-score {
+      background: #fef3c7;
+      color: #b45309;
+      border-color: #fde68a;
+    }
+
+    /* STATE: AKTIF DIBUKA */
+    .pertemuan-item.active { border-color: var(--primary-color); box-shadow: var(--shadow); }
+    .pertemuan-item.active .btn-pertemuan { background: var(--primary-color); color: white; }
+    .pertemuan-item.active .btn-pertemuan i { color: white !important; }
+    .pertemuan-item.active .icon-chevron { transform: rotate(90deg); }
+
+    /* STATE: TUGAS SELESAI DI-UPLOAD */
+    .pertemuan-item.completed { border-color: #0d9488; background: #ccfbf1; }
+    .pertemuan-item.completed .btn-pertemuan { background: #0d9488; color: white; }
+    .pertemuan-item.completed .btn-pertemuan i { color: white !important; }
+
+    .status-tag {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-left: 10px;
+      font-weight: 600;
+    }
+    .tag-pending { background: #e2e8f0; color: #475569; }
+    .tag-success { background: #99f6e4; color: #115e59; }
+    .pertemuan-item.active .tag-pending { background: rgba(255,255,255,0.2); color: white; }
+    .pertemuan-item.completed .tag-success { background: rgba(255,255,255,0.25); color: white; }
+
+    .pertemuan-content-body {
+      padding: 1.5rem;
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sub-section {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .sub-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-open-direct {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 12px; background: #d1fae5; color: #047857; border: 1px solid #a7f3d0;
+      border-radius: 8px; font-size: 0.85rem; font-weight: 700; text-decoration: none;
+      margin-bottom: 0.8rem; transition: all 0.2s ease; width: 100%;
+    }
+    .btn-open-direct:hover { background: #a7f3d0; color: #065f46; }
+
+    .soal-box {
+      background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px;
+      padding: 12px 14px; margin-bottom: 10px; font-size: 0.9rem;
+    }
+    .soal-nomor { font-weight: 700; color: var(--primary-color); margin-bottom: 4px; }
+    .soal-pertanyaan { font-weight: 600; color: var(--text-main); whitespace: pre-line; line-height: 1.5; }
+
+    .file-drop-area {
+      border: 2px dashed #cbd5e1; border-radius: 10px; padding: 1.25rem 1rem;
+      text-align: center; background: #ffffff; cursor: pointer; transition: 0.3s;
+    }
+    .file-drop-area:hover { border-color: var(--primary-color); background: var(--primary-light); }
+
+    .upload-success-notice {
+      background: #ccfbf1; border: 1px solid #99f6e4; color: #115e59;
+      padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+      display: flex; align-items: center; gap: 8px; margin-top: 10px;
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+    }
+    .video-container iframe {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
+    }
+
+    .hidden { display: none !important; }
+    footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid rgba(5, 150, 105, 0.1); }
+
+    @media (max-width: 768px) {
+      header { padding: 0.8rem 1rem; }
+      .logo { font-size: 1.1rem; }
+      .logo img { height: 30px; }
+      .user-badge { font-size: 0.75rem; padding: 4px 10px; }
+      .btn-logout-header { padding: 4px 10px; font-size: 0.75rem; }
+      .container { margin: 1rem auto; padding: 0 0.8rem; }
+      .card { padding: 1.25rem; border-radius: 12px; margin-bottom: 1rem; }
+      .card-title { font-size: 1.15rem; margin-bottom: 1rem; }
+      .grid-selection { grid-template-columns: 1fr; gap: 1rem; }
+      .select-box { padding: 1.25rem; }
+      .select-box i { font-size: 2rem; margin-bottom: 0.5rem; }
+      .btn-pertemuan { padding: 14px 12px; font-size: 0.9rem; }
+      .status-tag { display: inline-block; margin-left: 4px; margin-top: 4px; font-size: 0.7rem; }
+      .pertemuan-content-body { padding: 1rem 0.8rem; gap: 1rem; }
+      .sub-section { padding: 1rem; }
+      .materi-iframe { height: 220px; }
+      .nilai-badge { font-size: 0.7rem; padding: 2px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <img id="appLogo" src="" alt="Logo">
+        <span>Sibela - Sistem Pembelajaran Daring PKBM Bahtera Dua</span>
+      </div>
+      
+      <div class="user-section">
+        <div class="user-badge" id="userBadge"><i class="fa-regular fa-circle-user"></i> Belum Login</div>
+        <button id="btnHeaderLogout" onclick="logout()" class="btn-logout-header hidden">
+          <i class="fa-solid fa-right-from-bracket"></i> Keluar
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- LAYAR 1: PILIH KELAS -->
+    <section class="card" id="stepPilihKelas">
+      <div class="card-title"><i class="fa-solid fa-school"></i> Pilih Tingkat Kelas</div>
+      <p style="color: var(--text-muted);">Silakan pilih tingkat kelas Anda untuk melanjutkan ke halaman login.</p>
+      
+      <div class="grid-selection">
+        <div class="select-box" onclick="pilihKelas('Kelas Bawah (1 - 3)')">
+          <i class="fa-solid fa-child"></i>
+          <h3>Kelas Bawah</h3>
+          <p style="color: var(--text-muted);">Tingkat Kelas 1, 2, & 3</p>
+        </div>
+        <div class="select-box" onclick="pilihKelas('Kelas Atas (4 - 6)')">
+          <i class="fa-solid fa-user-graduate"></i>
+          <h3>Kelas Atas</h3>
+          <p style="color: var(--text-muted);">Tingkat Kelas 4, 5, & 6</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAYAR 2: LOGIN -->
+    <section class="card hidden" id="stepLogin">
+      <div class="card-title">
+        <i class="fa-solid fa-right-to-bracket"></i> Login - <span id="labelKelasTerpilih"></span>
+      </div>
+
+      <div id="errorAlert" class="error-msg hidden">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="errorText">Tanggal lahir (password) salah atau data tidak ditemukan!</span>
+      </div>
+
+      <form id="formLogin">
+        <div class="form-group">
+          <label for="nama">Nama Lengkap</label>
+          <select id="nama" required>
+            <option value="" disabled selected>-- Memuat data siswa... --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tglLahir">Password (Tanggal Lahir: DDMMYYYY)</label>
+          <input type="text" id="tglLahir" placeholder="Contoh: 12042017" required>
+        </div>
+
+        <button type="submit" class="btn" id="btnLogin">
+          <i class="fa-solid fa-key"></i> Masuk Kelas
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="kembaliKePilihKelas()">
+          <i class="fa-solid fa-arrow-left"></i> Kembali ke Pilihan Kelas
+        </button>
+      </form>
+    </section>
+
+    <!-- LAYAR 2.5: ABSENSI -->
+    <section class="card hidden" id="stepAbsensi">
+      <div class="card-title"><i class="fa-solid fa-user-check"></i> Presensi / Absensi Harian</div>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">Halo <strong><span id="namaSiswaAbsen"></span></strong>, silakan konfirmasi kehadiran Anda untuk hari ini.</p>
+
+      <form id="formAbsensi">
+        <div class="form-group">
+          <label for="statusKehadiran">Status Kehadiran</label>
+          <select id="statusKehadiran" required>
+            <option value="Hadir">Hadir</option>
+            <option value="Izin">Izin</option>
+            <option value="Sakit">Sakit</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn" id="btnKirimAbsen">
+          <i class="fa-solid fa-clipboard-check"></i> Simpan Presensi & Lanjutkan
+        </button>
+      </form>
+    </section>
+
+    <!-- LAYAR 3: PILIH MATA PELAJARAN -->
+    <section class="card hidden" id="stepPilihMapel">
+      <div class="card-title"><i class="fa-solid fa-book"></i> Pilih Mata Pelajaran</div>
+      
+      <div id="statusAbsenNotice" class="alert alert-info" style="display: block;">
+        <i class="fa-solid fa-circle-check"></i> <span id="textNoticeAbsen">Anda telah terverifikasi melakukan presensi hari ini.</span>
+      </div>
+
+      <p style="color: var(--text-muted);">Silakan pilih mata pelajaran yang akan dilaksanakan hari ini.</p>
+      
+      <div class="grid-selection">
+        <div class="select-box" onclick="pilihMapel('Ilmu Pengetahuan Sosial')">
+          <i class="fa-solid fa-earth-americas"></i>
+          <h3>Ilmu Pengetahuan Sosial</h3>
+          <p style="color: var(--text-muted);">Materi, Soal & Pengumpulan Tugas IPS</p>
+        </div>
+        <div class="select-box" onclick="pilihMapel('Pendidikan Kewarganegaraan')">
+          <i class="fa-solid fa-flag"></i>
+          <h3>Pendidikan Kewarganegaraan</h3>
+          <p style="color: var(--text-muted);">Materi, Soal & Pengumpulan Tugas PKn</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- LAYAR 4: RUANG KELAS UTAMA DENGAN DAFTAR PERTEMUAN -->
+    <section id="stepRuangKelas" class="hidden">
+      <div class="card" style="margin-bottom: 1.5rem; background: var(--primary-light); border-color: #86efac;">
+        <h2 style="font-size: 1.2rem;"><i class="fa-solid fa-door-open"></i> Ruang Kelas: <span id="namaRuangMapel"></span></h2>
+        <p style="font-size: 0.9rem;">Kelas: <strong><span id="namaRuangKelas"></span></strong></p>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-list-check"></i> Daftar Pertemuan Pembelajaran</div>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Klik salah satu pertemuan untuk membuka Materi, Video Youtube, Soal, dan Pengumpulan Tugas.</p>
+
+        <div id="containerListPertemuan" class="pertemuan-list">
+          <div id="loadingPertemuan" style="font-size: 0.9rem; color: var(--text-muted);">
+            <i class="fa-solid fa-spinner fa-spin"></i> Memuat daftar pertemuan...
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1rem;">
+        <button onclick="kembaliKePilihMapel()" class="btn btn-secondary" style="width: 100%; padding: 10px 20px;">
+          <i class="fa-solid fa-arrow-left"></i> Ganti Mata Pelajaran
+        </button>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Sibela Class System. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ============================================================
+    // 1. URL LOGO DAN GOOGLE APPS SCRIPT
+    // ============================================================
+    const LOGO_URL = "https://cdn-icons-png.flaticon.com/512/2997/2997321.png";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-UzEguTBphtCTQoM0oliUvbYeXfb6Y0uBlvJaw_hzEniw12yGCovxrZReSxloZMQA/exec";
+
+    document.getElementById('appLogo').src = LOGO_URL;
+
+    let databaseSiswa = [];
+    let kelasDipilih = "";
+    let mapelDipilih = "";
+    let siswaAktif = "";
+    let daftarPertemuanAktif = [];
+
+    function getHariIni() {
+      const today = new Date();
+      return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    }
+
+    // MEMUAT DATA SISWA DARI SPREADSHEET (TAB: Siswa)
+    function pilihKelas(namaKelas) {
+      kelasDipilih = namaKelas;
+      document.getElementById('stepPilihKelas').classList.add('hidden');
+      document.getElementById('stepLogin').classList.remove('hidden');
+      document.getElementById('labelKelasTerpilih').textContent = namaKelas;
+
+      const selectNama = document.getElementById('nama');
+      selectNama.innerHTML = '<option value="" disabled selected>-- Memuat data siswa... --</option>';
+
+      fetch(`${SCRIPT_URL}?action=getSiswa&kelas=${encodeURIComponent(namaKelas)}`)
+        .then(res => res.json())
+        .then(res => {
+          selectNama.innerHTML = '<option value="" disabled selected>-- Pilih Nama Anda --</option>';
+          if (res.status === 'success' && res.data.length > 0) {
+            databaseSiswa = res.data;
+            res.data.forEach(siswa => {
+              const opt = document.createElement('option');
+              opt.value = siswa.nama;
+              opt.textContent = siswa.nama;
+              selectNama.appendChild(opt);
+            });
+          } else {
+            selectNama.innerHTML = '<option value="" disabled selected>-- Tidak ada siswa ditemukan --</option>';
+          }
+        })
+        .catch(err => {
+          alert("Gagal memuat data siswa dari Google Spreadsheet!");
+          selectNama.innerHTML = '<option value="" disabled selected>-- Gagal memuat data --</option>';
+        });
+    }
+
+    function kembaliKePilihKelas() {
+      document.getElementById('stepLogin').classList.add('hidden');
+      document.getElementById('stepPilihKelas').classList.remove('hidden');
+    }
+
+    // 2. PROSES LOGIN & CEK ABSENSI (DIUBAH: JIKA SUDAH ABSEN / HADIR LANGSUNG KE PILIH MAPEL)
+    document.getElementById('formLogin').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nama = document.getElementById('nama').value;
+      const tglLahir = document.getElementById('tglLahir').value.trim();
+      const valid = databaseSiswa.find(s => s.nama === nama && String(s.tglLahir).trim() === tglLahir);
+
+      if (!valid) {
+        document.getElementById('errorAlert').classList.remove('hidden');
+        return;
+      }
+
+      siswaAktif = nama;
+      document.getElementById('errorAlert').classList.add('hidden');
+      
+      document.getElementById('userBadge').innerHTML = `<i class="fa-solid fa-user-check"></i> ${nama}`;
+      document.getElementById('btnHeaderLogout').classList.remove('hidden');
+
+      const btnLogin = document.getElementById('btnLogin');
+      btnLogin.disabled = true;
+      btnLogin.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memeriksa Status Presensi...`;
+
+      // Cek apakah siswa sudah absen hari ini di Spreadsheet
+      fetch(`${SCRIPT_URL}?action=checkAbsen&nama=${encodeURIComponent(nama)}&tanggal=${getHariIni()}`)
+        .then(res => res.json())
+        .then(res => {
+          btnLogin.disabled = false;
+          btnLogin.innerHTML = `<i class="fa-solid fa-key"></i> Masuk Ke Sistem`;
+
+          if (res.sudahAbsen) {
+            // SISWA SUDAH ABSEN (HADIR/IZIN/SAKIT) -> MELEWATI HALAMAN ABSENSI & LANGSUNG MENUJU PILIH MAPEL
+            document.getElementById('stepLogin').classList.add('hidden');
+            document.getElementById('textNoticeAbsen').textContent = `Status presensi Anda hari ini: ${res.status}. Selamat belajar!`;
+            document.getElementById('stepPilihMapel').classList.remove('hidden');
+          } else {
+            // SISWA BELUM ABSEN -> TAMPILKAN LAYAR ABSENSI HARIAN
+            document.getElementById('stepLogin').classList.add('hidden');
+            document.getElementById('namaSiswaAbsen').textContent = siswaAktif;
+            document.getElementById('stepAbsensi').classList.remove('hidden');
+          }
+        })
+        .catch(() => {
+          btnLogin.disabled = false;
+          btnLogin.innerHTML = `<i class="fa-solid fa-key"></i> Masuk Ke Sistem`;
+          document.getElementById('stepLogin').classList.add('hidden');
+          document.getElementById('namaSiswaAbsen').textContent = siswaAktif;
+          document.getElementById('stepAbsensi').classList.remove('hidden');
+        });
+    });
+
+    // 3. SIMPAN PRESENSI KE GOOGLE SPREADSHEET (TAB: Absensi)
+    document.getElementById('formAbsensi').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const status = document.getElementById('statusKehadiran').value;
+      const btnKirim = document.getElementById('btnKirimAbsen');
+      
+      btnKirim.disabled = true;
+      btnKirim.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+
+      const payload = {
+        action: 'saveAbsen',
+        nama: siswaAktif,
+        kelas: kelasDipilih,
+        tanggal: getHariIni(),
+        status: status
+      };
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => {
+        btnKirim.disabled = false;
+        btnKirim.innerHTML = `<i class="fa-solid fa-clipboard-check"></i> Simpan Presensi & Lanjutkan`;
+
+        document.getElementById('stepAbsensi').classList.add('hidden');
+        document.getElementById('textNoticeAbsen').textContent = `Presensi berhasil disimpan: Status ${status}.`;
+        document.getElementById('stepPilihMapel').classList.remove('hidden');
+      })
+      .catch(err => {
+        btnKirim.disabled = false;
+        btnKirim.innerHTML = `<i class="fa-solid fa-clipboard-check"></i> Simpan Presensi & Lanjutkan`;
+        alert("Gagal menyimpan presensi. Silakan coba lagi.");
+      });
+    });
+
+    function pilihMapel(namaMapel) {
+      mapelDipilih = namaMapel;
+      document.getElementById('stepPilihMapel').classList.add('hidden');
+      document.getElementById('stepRuangKelas').classList.remove('hidden');
+
+      document.getElementById('namaRuangMapel').textContent = namaMapel;
+      document.getElementById('namaRuangKelas').textContent = kelasDipilih;
+
+      muatPertemuanLengkap(kelasDipilih, namaMapel);
+    }
+
+    // 4. MEMUAT DAFTAR PERTEMUAN, MATERI, SOAL & NILAI
+    function muatPertemuanLengkap(kelas, mapel) {
+      const containerList = document.getElementById('containerListPertemuan');
+      containerList.innerHTML = `<div style="font-size: 0.9rem; color: var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Memuat daftar pertemuan...</div>`;
+
+      const fetchUrl = `${SCRIPT_URL}?action=getPertemuanLengkap&kelas=${encodeURIComponent(kelas)}&mapel=${encodeURIComponent(mapel)}&nama=${encodeURIComponent(siswaAktif)}`;
+
+      fetch(fetchUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success" && data.pertemuan.length > 0) {
+            daftarPertemuanAktif = data.pertemuan;
+            renderSemuaPertemuan(daftarPertemuanAktif);
+          } else {
+            containerList.innerHTML = `<p style="font-size:0.9rem; color:var(--text-muted);">Belum ada pertemuan yang tersedia untuk mata pelajaran ini.</p>`;
+          }
+        })
+        .catch(err => {
+          containerList.innerHTML = `<p style="font-size:0.9rem; color:var(--danger-color);">Gagal memuat data pertemuan dari server.</p>`;
+        });
+    }
+
+    function renderSemuaPertemuan(listPertemuan) {
+      const containerList = document.getElementById('containerListPertemuan');
+      containerList.innerHTML = '';
+
+      listPertemuan.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'pertemuan-item';
+        itemDiv.id = `pertemuanItem_${index}`;
+
+        const namaPertemuan = item.pertemuan || `Pertemuan ${index + 1}`;
+        const isCompleted = item.isCompleted || false;
+        
+        const nilaiSiswa = (item.nilai !== undefined && item.nilai !== null && item.nilai !== "") ? item.nilai : "Belum Dinilai";
+        const hasScore = nilaiSiswa !== "Belum Dinilai";
+
+        if (isCompleted) itemDiv.classList.add('completed');
+
+        const linkLangsung = item.linkLangsung || (item.linkEmbed ? item.linkEmbed.replace('/preview', '/view') : '#');
+
+        let soalHtml = '';
+        if (item.soal && item.soal.length > 0) {
+          item.soal.forEach((s, idx) => {
+            soalHtml += `
+              <div class="soal-box">
+                <div class="soal-nomor">Soal No. ${idx + 1}</div>
+                <div class="soal-pertanyaan">${s.pertanyaan}</div>
+              </div>
+            `;
+          });
+        } else {
+          soalHtml = '<p style="font-size:0.85rem; color:var(--text-muted);">Tidak ada soal uraian untuk pertemuan ini.</p>';
+        }
+
+        let youtubeHtml = '';
+        if (item.linkYoutube && item.linkYoutube.trim() !== "") {
+          youtubeHtml = `
+            <div class="sub-section">
+              <div class="sub-title"><i class="fa-brands fa-youtube" style="color: #ef4444;"></i> Video Pembelajaran (YouTube)</div>
+              <div class="video-container">
+                <iframe src="${item.linkYoutube}" title="Video Pembelajaran" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+            </div>
+          `;
+        }
+
+        itemDiv.innerHTML = `
+          <button class="btn-pertemuan" onclick="togglePertemuan(${index})">
+            <span>
+              <i class="fa-solid fa-folder-open" style="margin-right:8px; color: ${isCompleted ? '#ffffff' : 'var(--primary-color)'};"></i> 
+              ${namaPertemuan}
+              <span id="tagStatus_${index}" class="status-tag ${isCompleted ? 'tag-success' : 'tag-pending'}">
+                ${isCompleted ? '✓ Selesai' : 'Belum Selesai'}
+              </span>
+            </span>
+            <div class="pertemuan-right-side">
+              <span class="nilai-badge ${hasScore ? 'has-score' : ''}">
+                <i class="fa-solid fa-award"></i> ${hasScore ? 'Nilai: ' + nilaiSiswa : 'Belum Dinilai'}
+              </span>
+              <i class="fa-solid fa-chevron-right icon-chevron" style="font-size: 0.85rem; transition: transform 0.2s;"></i>
+            </div>
+          </button>
+          
+          <div id="contentBody_${index}" class="pertemuan-content-body hidden">
+            
+            <div class="sub-section">
+              <div class="sub-title"><i class="fa-solid fa-book-open" style="color: var(--primary-color);"></i> Materi Pembelajaran</div>
+              <p style="color: var(--text-main); font-size: 0.88rem; font-weight: 700; margin-bottom: 0.5rem;">${item.judul}</p>
+              <a href="${item.linkEmbed}" target="_blank" class="btn-open-direct">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Materi di Tab Baru
+              </a>
+              <iframe class="materi-iframe" src="${item.linkEmbed}/preview" width="100%" height="700" style="border: 1px solid #cbd5e1; border-radius: 8px;" allow="autoplay"></iframe>
+            </div>
+
+            ${youtubeHtml}
+
+            <div class="sub-section">
+              <div class="sub-title"><i class="fa-solid fa-pen-to-square" style="color: #d97706;"></i> Lembar Soal</div>
+              <p style="color: var(--text-muted); font-size: 0.82rem; margin-bottom: 0.8rem;">Jawablah pertanyaan di bawah ini pada buku catatan Anda:</p>
+              <div>${soalHtml}</div>
+            </div>
+
+            <div class="sub-section">
+              <div class="sub-title"><i class="fa-solid fa-cloud-arrow-up" style="color: #0284c7;"></i> Pengumpulan Tugas</div>
+              
+              <div id="noticeSuccess_${index}" class="upload-success-notice ${isCompleted ? '' : 'hidden'}">
+                <i class="fa-solid fa-circle-check"></i> Anda sudah berhasil mengirimkan tugas untuk ${namaPertemuan}.
+              </div>
+
+              <form onsubmit="kirimTugasPertemuan(event, ${index}, '${namaPertemuan}')" style="margin-top: 0.8rem;">
+                <div class="form-group">
+                  <label style="font-size: 0.8rem;">Unggah Foto / PDF Jawaban Uraian Anda</label>
+                  <div class="file-drop-area" onclick="document.getElementById('fileInput_${index}').click()">
+                    <i class="fa-solid fa-file-arrow-up" style="color: var(--text-muted); font-size: 1.5rem; margin-bottom: 4px;"></i>
+                    <p id="dropText_${index}" style="font-size: 0.8rem; color: var(--text-muted);">Klik untuk memilih file</p>
+                    <div id="preview_${index}" style="margin-top: 0.3rem; font-size: 0.8rem; color: var(--primary-color); font-weight: 700;"></div>
+                  </div>
+                  <input type="file" id="fileInput_${index}" style="display: none;" required onchange="updateFilePreview(this, ${index})">
+                </div>
+
+                <button type="submit" class="btn" id="btnUpload_${index}" style="background: #0284c7; font-size: 0.9rem; padding: 10px;">
+                  <i class="fa-solid fa-paper-plane"></i> Kirim Tugas ${namaPertemuan}
+                </button>
+              </form>
+            </div>
+
+          </div>
+        `;
+
+        containerList.appendChild(itemDiv);
+      });
+    }
+
+    function togglePertemuan(targetIndex) {
+      const allItems = document.querySelectorAll('.pertemuan-item');
+      const allBodies = document.querySelectorAll('.pertemuan-content-body');
+
+      const currentItem = document.getElementById(`pertemuanItem_${targetIndex}`);
+      const currentBody = document.getElementById(`contentBody_${targetIndex}`);
+
+      const isOpen = !currentBody.classList.contains('hidden');
+
+      allItems.forEach(item => item.classList.remove('active'));
+      allBodies.forEach(body => body.classList.add('hidden'));
+
+      if (!isOpen) {
+        currentItem.classList.add('active');
+        currentBody.classList.remove('hidden');
+      }
+    }
+
+    function updateFilePreview(input, index) {
+      const preview = document.getElementById(`preview_${index}`);
+      if (input.files && input.files[0]) {
+        preview.textContent = "File terpilih: " + input.files[0].name;
+      } else {
+        preview.textContent = "";
+      }
+    }
+
+    // 5. MENGUNGGAH FILE DAN TUGAS KE GOOGLE DRIVE & SPREADSHEET (TAB: Tugas)
+    function kirimTugasPertemuan(e, index, namaPertemuan) {
+      e.preventDefault();
+
+      const fileInput = document.getElementById(`fileInput_${index}`);
+      const btnUpload = document.getElementById(`btnUpload_${index}`);
+      const itemBox = document.getElementById(`pertemuanItem_${index}`);
+      const tagStatus = document.getElementById(`tagStatus_${index}`);
+      const noticeSuccess = document.getElementById(`noticeSuccess_${index}`);
+
+      if (!fileInput.files || !fileInput.files[0]) return;
+
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      btnUpload.disabled = true;
+      btnUpload.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah File...`;
+
+      reader.onload = function(e) {
+        const rawBytes = e.target.result.split(',')[1];
+
+        const payload = {
+          action: 'uploadTugas',
+          nama: siswaAktif,
+          kelas: kelasDipilih,
+          mapel: mapelDipilih,
+          pertemuan: namaPertemuan,
+          fileName: file.name,
+          mimeType: file.type,
+          fileData: rawBytes
+        };
+
+        fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(res => {
+          btnUpload.disabled = false;
+          btnUpload.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Ulang Tugas`;
+
+          if (res.status === 'success') {
+            itemBox.classList.add('completed');
+            tagStatus.className = 'status-tag tag-success';
+            tagStatus.textContent = '✓ Selesai';
+            noticeSuccess.classList.remove('hidden');
+
+            alert(`Tugas ${namaPertemuan} berhasil diunggah ke Google Drive dan tersimpan di database!`);
+          } else {
+            alert("Gagal mengunggah tugas: " + res.message);
+          }
+        })
+        .catch(err => {
+          btnUpload.disabled = false;
+          btnUpload.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Ulang Tugas`;
+          alert("Terjadi kesalahan koneksi saat mengunggah file.");
+        });
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function kembaliKePilihMapel() {
+      document.getElementById('stepRuangKelas').classList.add('hidden');
+      document.getElementById('stepPilihMapel').classList.remove('hidden');
+    }
+
+    function logout() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>
