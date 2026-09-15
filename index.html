@@ -56,17 +56,29 @@
 
             <!-- User Section & Theme Toggle -->
             <div class="flex items-center gap-3">
-                <div id="userBadge" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 text-xs font-bold border border-emerald-300/50 dark:border-emerald-700/50">
-                    <i class="fa-regular fa-circle-user"></i> Belum Login
-                </div>
-                
-                <button id="btnHeaderLogout" onclick="logout()" class="hidden px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-right-from-bracket"></i> Keluar
-                </button>
-
                 <!-- Dark Mode Toggle Button -->
                 <button type="button" id="themeToggle" aria-label="Toggle Dark Mode" class="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-800/50 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition">
                     <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+                </button>
+
+                <!-- Keterangan Belum Login -->
+                <div id="badgeBelumLogin" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 text-xs font-bold border border-emerald-300/50 dark:border-emerald-700/50">
+                    <i class="fa-regular fa-circle-user"></i> Belum Login
+                </div>
+
+                <!-- Nama Siswa (Muncul Setelah Login) -->
+                <div id="userBadge" class="hidden items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 text-xs font-bold border border-emerald-300/50 dark:border-emerald-700/50">
+                    <i class="fa-solid fa-user-check"></i> <span id="userNameText"></span>
+                </div>
+
+                <!-- Tombol Kembali ke Dashboard (Merah - Semirip Tombol Keluar) -->
+                <a id="btnKembaliDashboard" href="https://pkbmbd.github.io/dashboard/" class="px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Kembali ke</span> Dashboard
+                </a>
+                
+                <!-- Tombol Keluar (Muncul Setelah Login) -->
+                <button id="btnHeaderLogout" onclick="logout()" class="hidden px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-right-from-bracket"></i> Keluar
                 </button>
             </div>
         </div>
@@ -255,9 +267,6 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // ============================================================
-        // 1. URL SCRIPT & TEMA TOGGLE
-        // ============================================================
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-UzEguTBphtCTQoM0oliUvbYeXfb6Y0uBlvJaw_hzEniw12yGCovxrZReSxloZMQA/exec";
 
         let databaseSiswa = [];
@@ -300,12 +309,16 @@
             return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
         }
 
-        // MEMUAT DATA SISWA DARI SPREADSHEET (TAB: Siswa)
+        // MEMUAT DATA SISWA & MENYEMBUNYIKAN TOMBOL KEMBALI KE DASHBOARD
         function pilihKelas(namaKelas) {
             kelasDipilih = namaKelas;
             document.getElementById('stepPilihKelas').classList.add('hidden');
             document.getElementById('stepLogin').classList.remove('hidden');
             document.getElementById('labelKelasTerpilih').textContent = namaKelas;
+
+            // SEMBUNYIKAN TOMBOL KEMBALI KE DASHBOARD & STATUS BELUM LOGIN
+            document.getElementById('btnKembaliDashboard').classList.add('hidden');
+            document.getElementById('badgeBelumLogin').classList.add('hidden');
 
             const selectNama = document.getElementById('nama');
             selectNama.innerHTML = '<option value="" disabled selected>-- Memuat data siswa... --</option>';
@@ -335,9 +348,13 @@
         function kembaliKePilihKelas() {
             document.getElementById('stepLogin').classList.add('hidden');
             document.getElementById('stepPilihKelas').classList.remove('hidden');
+
+            // TAMPILKAN KEMBALI TOMBOL DASHBOARD JIKA KEMBALI KE BERANDA AWAL
+            document.getElementById('btnKembaliDashboard').classList.remove('hidden');
+            document.getElementById('badgeBelumLogin').classList.remove('hidden');
         }
 
-        // 2. PROSES LOGIN & CEK ABSENSI
+        // PROSES LOGIN & CEK ABSENSI
         document.getElementById('formLogin').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -353,7 +370,7 @@
             siswaAktif = nama;
             document.getElementById('errorAlert').classList.add('hidden');
             
-            document.getElementById('userBadge').innerHTML = `<i class="fa-solid fa-user-check"></i> ${nama}`;
+            document.getElementById('userNameText').textContent = nama;
             document.getElementById('userBadge').classList.remove('hidden');
             document.getElementById('userBadge').classList.add('flex');
             document.getElementById('btnHeaderLogout').classList.remove('hidden');
@@ -387,7 +404,7 @@
                 });
         });
 
-        // 3. SIMPAN PRESENSI KE SPREADSHEET
+        // SIMPAN PRESENSI KE SPREADSHEET
         document.getElementById('formAbsensi').addEventListener('submit', function(e) {
             e.preventDefault();
             const status = document.getElementById('statusKehadiran').value;
@@ -435,7 +452,7 @@
             muatPertemuanLengkap(kelasDipilih, namaMapel);
         }
 
-        // 4. MEMUAT DAFTAR PERTEMUAN, MATERI, SOAL & NILAI
+        // MEMUAT DAFTAR PERTEMUAN
         function muatPertemuanLengkap(kelas, mapel) {
             const containerList = document.getElementById('containerListPertemuan');
             containerList.innerHTML = `<div class="text-xs text-slate-500 dark:text-emerald-300/70 flex items-center gap-2 py-4"><i class="fa-solid fa-spinner fa-spin text-emerald-600"></i> Memuat daftar pertemuan...</div>`;
@@ -519,23 +536,24 @@
                     
                     <div id="contentBody_${index}" class="hidden p-4 sm:p-6 bg-white dark:bg-emerald-900/20 border-t border-emerald-100 dark:border-emerald-800/60 space-y-6">
                         
-                        <!-- MATERI -->
                         <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 space-y-3">
                             <div class="text-xs font-bold text-slate-900 dark:text-emerald-100 flex items-center gap-2">
                                 <i class="fa-solid fa-book-open text-emerald-600 dark:text-emerald-400 text-base"></i> Materi Pembelajaran
                             </div>
-                            <p class="text-xs text-slate-600 dark:text-emerald-200/80 leading-relaxed">${item.judul}</p>
-                            <a href="${item.linkEmbed}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-200 text-xs font-bold transition text-justify">
+    
+                            <p class="text-xs text-slate-600 dark:text-emerald-200/80 leading-relaxed text-justify">${item.judul}</p>
+    
+                            <a href="${item.linkEmbed}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-200 text-xs font-bold transition">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Materi di Tab Baru
                             </a>
-                            <div class="w-full rounded-xl overflow-hidden border border-emerald-200 dark:border-emerald-800 shadow-inner">
-                                <iframe class="w-full h-160 sm:h-96 border-0" src="${item.linkEmbed}/preview" allow="autoplay"></iframe>
+    
+                             <div class="w-full rounded-xl overflow-hidden border border-emerald-200 dark:border-emerald-800 shadow-inner">
+                                <iframe class="w-full h-[500px] sm:h-[650px] border-0" src="${item.linkEmbed}/preview" allow="autoplay"></iframe>
                             </div>
                         </div>
 
                         ${youtubeHtml}
 
-                        <!-- SOAL -->
                         <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 space-y-3">
                             <div class="text-xs font-bold text-slate-900 dark:text-emerald-100 flex items-center gap-2">
                                 <i class="fa-solid fa-pen-to-square text-amber-500 text-base"></i> Lembar Soal
@@ -544,7 +562,6 @@
                             <div>${soalHtml}</div>
                         </div>
 
-                        <!-- UPLOAD TUGAS -->
                         <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 space-y-3">
                             <div class="text-xs font-bold text-slate-900 dark:text-emerald-100 flex items-center gap-2">
                                 <i class="fa-solid fa-cloud-arrow-up text-sky-600 text-base"></i> Pengumpulan Tugas
@@ -601,7 +618,6 @@
             }
         }
 
-        // 5. MENGUNGGAH FILE DAN TUGAS KE SPREADSHEET & DRIVE
         function kirimTugasPertemuan(e, index, namaPertemuan) {
             e.preventDefault();
 
