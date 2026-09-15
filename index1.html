@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Sibela - SIBELA PKBM Bahtera Dua</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-emerald-50 dark:bg-emerald-950 text-slate-800 dark:text-emerald-100 min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="border-b border-emerald-200 dark:border-emerald-800/60 bg-white/80 dark:bg-emerald-900/40 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo & Brand Name -->
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl overflow-hidden bg-white flex items-center justify-center shadow-lg shadow-emerald-600/20 border border-emerald-500/30 shrink-0 p-1">
+                    <img 
+                        id="appLogo"
+                        src="https://raw.githubusercontent.com/pkbmbd/spmb/refs/heads/main/0.%20Logo%20PKBM%20Bahtera%20Dua.png" 
+                        alt="Logo PKBM Bahtera Dua" 
+                        class="w-full h-full object-contain"
+                        onerror="this.onerror=null; this.src='https://via.placeholder.com/150/059669/FFFFFF?text=LOGO';"
+                    />
+                </div>
+                <div>
+                    <h1 class="font-black text-lg sm:text-xl tracking-tight text-emerald-950 dark:text-emerald-50">SIBELA DIGITAL</h1>
+                    <p class="text-xs font-medium text-emerald-600 dark:text-emerald-400">Kelas Online PKBM Bahtera Dua</p>
+                </div>
+            </div>
+
+            <!-- User Section & Theme Toggle -->
+            <div class="flex items-center gap-3">
+                <div id="userBadge" class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 text-xs font-bold border border-emerald-300/50 dark:border-emerald-700/50">
+                    <i class="fa-regular fa-circle-user"></i> Belum Login
+                </div>
+                
+                <button id="btnHeaderLogout" onclick="logout()" class="hidden px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-right-from-bracket"></i> Keluar
+                </button>
+
+                <!-- Dark Mode Toggle Button -->
+                <button type="button" id="themeToggle" aria-label="Toggle Dark Mode" class="p-2.5 rounded-xl bg-emerald-100 dark:bg-emerald-800/50 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-200 dark:hover:bg-emerald-800 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+        <!-- LAYAR 1: PILIH KELAS -->
+        <section id="stepPilihKelas" class="space-y-6">
+            <div class="bg-white dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-school"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-emerald-950 dark:text-emerald-50">Pilih Tingkat Kelas</h2>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-emerald-200/70 mt-2">Silakan pilih tingkat kelas Anda untuk melanjutkan ke halaman login.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div onclick="pilihKelas('Kelas Bawah (1 - 3)')" class="group p-8 rounded-3xl bg-emerald-50/50 dark:bg-emerald-950/40 border-2 border-emerald-200 dark:border-emerald-800 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer text-center space-y-4">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition">
+                            <i class="fa-solid fa-child"></i>
+                        </div>
+                        <h3 class="font-black text-xl text-emerald-950 dark:text-emerald-50">Kelas Bawah</h3>
+                        <p class="text-xs text-slate-500 dark:text-emerald-300/70">Tingkat Kelas 1, 2, & 3</p>
+                    </div>
+
+                    <div onclick="pilihKelas('Kelas Atas (4 - 6)')" class="group p-8 rounded-3xl bg-emerald-50/50 dark:bg-emerald-950/40 border-2 border-emerald-200 dark:border-emerald-800 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer text-center space-y-4">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition">
+                            <i class="fa-solid fa-user-graduate"></i>
+                        </div>
+                        <h3 class="font-black text-xl text-emerald-950 dark:text-emerald-50">Kelas Atas</h3>
+                        <p class="text-xs text-slate-500 dark:text-emerald-300/70">Tingkat Kelas 4, 5, & 6</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LAYAR 2: LOGIN -->
+        <section id="stepLogin" class="hidden max-w-md mx-auto py-6">
+            <div class="bg-white dark:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 rounded-3xl p-8 shadow-xl space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-3xl mx-auto mb-4">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-emerald-950 dark:text-emerald-50">Login Peserta Didik</h2>
+                    <p class="text-xs text-emerald-600 dark:text-emerald-400 font-bold" id="labelKelasTerpilih"></p>
+                </div>
+
+                <div id="errorAlert" class="hidden p-3 rounded-xl bg-red-100 dark:bg-red-950/50 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 text-xs font-semibold flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-base"></i>
+                    <span id="errorText">Tanggal lahir (password) salah atau data tidak ditemukan!</span>
+                </div>
+
+                <form id="formLogin" class="space-y-4">
+                    <div>
+                        <label for="nama" class="block text-xs font-bold text-emerald-900 dark:text-emerald-200 uppercase tracking-wider mb-2">Nama Lengkap</label>
+                        <select id="nama" required class="w-full px-4 py-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-sm focus:outline-none focus:border-emerald-500 text-emerald-950 dark:text-emerald-100 transition cursor-pointer">
+                            <option value="" disabled selected>-- Memuat data siswa... --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="tglLahir" class="block text-xs font-bold text-emerald-900 dark:text-emerald-200 uppercase tracking-wider mb-2">Password (Tanggal Lahir: DDMMYYYY)</label>
+                        <input type="text" id="tglLahir" placeholder="Contoh: 12042017" required class="w-full px-4 py-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-sm focus:outline-none focus:border-emerald-500 text-emerald-950 dark:text-emerald-100 transition">
+                    </div>
+
+                    <button type="submit" id="btnLogin" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 transition duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-key"></i> Masuk Kelas
+                    </button>
+                    
+                    <button type="button" onclick="kembaliKePilihKelas()" class="w-full py-2.5 px-4 rounded-xl bg-emerald-100 dark:bg-emerald-800/50 text-emerald-800 dark:text-emerald-200 font-semibold text-xs transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Pilihan Kelas
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- LAYAR 2.5: ABSENSI -->
+        <section id="stepAbsensi" class="hidden max-w-md mx-auto py-6">
+            <div class="bg-white dark:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 rounded-3xl p-8 shadow-xl space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-3xl mx-auto mb-4">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <h2 class="text-2xl font-black text-emerald-950 dark:text-emerald-50">Presensi Harian</h2>
+                    <p class="text-xs text-slate-500 dark:text-emerald-300/70">Halo <strong id="namaSiswaAbsen" class="text-emerald-600 dark:text-emerald-400"></strong>, konfirmasi kehadiran Anda untuk hari ini.</p>
+                </div>
+
+                <form id="formAbsensi" class="space-y-4">
+                    <div>
+                        <label for="statusKehadiran" class="block text-xs font-bold text-emerald-900 dark:text-emerald-200 uppercase tracking-wider mb-2">Status Kehadiran</label>
+                        <select id="statusKehadiran" required class="w-full px-4 py-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-sm focus:outline-none focus:border-emerald-500 text-emerald-950 dark:text-emerald-100 transition cursor-pointer">
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="btnKirimAbsen" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 transition duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-clipboard-check"></i> Simpan Presensi & Lanjutkan
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- LAYAR 3: PILIH MATA PELAJARAN -->
+        <section id="stepPilihMapel" class="hidden space-y-6">
+            <div class="bg-white dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                <div>
+                    <div id="statusAbsenNotice" class="p-3.5 mb-4 rounded-2xl bg-emerald-100 dark:bg-emerald-800/40 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100 text-xs font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-emerald-600 dark:text-emerald-400 text-base"></i> 
+                        <span id="textNoticeAbsen">Anda telah terverifikasi melakukan presensi hari ini.</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-emerald-950 dark:text-emerald-50">Pilih Mata Pelajaran</h2>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-600 dark:text-emerald-200/70 mt-2">Silakan pilih mata pelajaran yang akan dilaksanakan hari ini.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div onclick="pilihMapel('Ilmu Pengetahuan Sosial')" class="group p-8 rounded-3xl bg-emerald-50/50 dark:bg-emerald-950/40 border-2 border-emerald-200 dark:border-emerald-800 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer text-center space-y-4">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition">
+                            <i class="fa-solid fa-earth-americas"></i>
+                        </div>
+                        <h3 class="font-black text-xl text-emerald-950 dark:text-emerald-50">Ilmu Pengetahuan Sosial</h3>
+                        <p class="text-xs text-slate-500 dark:text-emerald-300/70">Materi, Soal & Pengumpulan Tugas IPS</p>
+                    </div>
+
+                    <div onclick="pilihMapel('Pendidikan Kewarganegaraan')" class="group p-8 rounded-3xl bg-emerald-50/50 dark:bg-emerald-950/40 border-2 border-emerald-200 dark:border-emerald-800 hover:border-emerald-500 dark:hover:border-emerald-400 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer text-center space-y-4">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-800 text-emerald-600 dark:text-emerald-300 flex items-center justify-center text-3xl mx-auto group-hover:scale-110 transition">
+                            <i class="fa-solid fa-flag"></i>
+                        </div>
+                        <h3 class="font-black text-xl text-emerald-950 dark:text-emerald-50">Pendidikan Kewarganegaraan</h3>
+                        <p class="text-xs text-slate-500 dark:text-emerald-300/70">Materi, Soal & Pengumpulan Tugas PKn</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LAYAR 4: RUANG KELAS UTAMA DENGAN DAFTAR PERTEMUAN -->
+        <section id="stepRuangKelas" class="hidden space-y-6">
+            
+            <!-- BANNER MAPEL -->
+            <div class="p-6 rounded-3xl bg-gradient-to-r from-emerald-800 via-emerald-700 to-green-900 text-white shadow-xl border border-emerald-600/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-emerald-200">Ruang Kelas Online</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white" id="namaRuangMapel"></h2>
+                    <p class="text-xs text-emerald-100/80 mt-1">Tingkat: <strong id="namaRuangKelas"></strong></p>
+                </div>
+                <button onclick="kembaliKePilihMapel()" class="self-start sm:self-center px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/20 text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Ganti Mata Pelajaran
+                </button>
+            </div>
+
+            <!-- CARD LIST PERTEMUAN -->
+            <div class="bg-white dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                <div>
+                    <h3 class="text-xl font-black text-emerald-950 dark:text-emerald-50 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-emerald-600 dark:text-emerald-400"></i> Daftar Pertemuan Pembelajaran
+                    </h3>
+                    <p class="text-xs text-slate-500 dark:text-emerald-300/70 mt-1">Klik salah satu pertemuan untuk membuka Materi, Video YouTube, Soal, dan Pengumpulan Tugas.</p>
+                </div>
+
+                <div id="containerListPertemuan" class="space-y-4">
+                    <div id="loadingPertemuan" class="text-xs text-slate-500 dark:text-emerald-300/70 flex items-center gap-2 py-4">
+                        <i class="fa-solid fa-spinner fa-spin text-emerald-600"></i> Memuat daftar pertemuan...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-emerald-200 dark:border-emerald-800/60 py-6 text-center text-xs text-emerald-700 dark:text-emerald-400">
+        <p>&copy; 2026 Sibela Class System - PKBM Bahtera Dua Kota Blitar. All rights reserved.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // ============================================================
+        // 1. URL SCRIPT & TEMA TOGGLE
+        // ============================================================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-UzEguTBphtCTQoM0oliUvbYeXfb6Y0uBlvJaw_hzEniw12yGCovxrZReSxloZMQA/exec";
+
+        let databaseSiswa = [];
+        let kelasDipilih = "";
+        let mapelDipilih = "";
+        let siswaAktif = "";
+        let daftarPertemuanAktif = [];
+
+        // Dark/Light Mode Switcher
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const htmlElement = document.documentElement;
+
+        function updateThemeUI(isDark) {
+            if (isDark) {
+                htmlElement.classList.add('dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                htmlElement.classList.remove('dark');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            updateThemeUI(true);
+        } else {
+            updateThemeUI(false);
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = htmlElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeIcon.classList.toggle('fa-moon', !isDark);
+            themeIcon.classList.toggle('fa-sun', isDark);
+        });
+
+        function getHariIni() {
+            const today = new Date();
+            return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        }
+
+        // MEMUAT DATA SISWA DARI SPREADSHEET (TAB: Siswa)
+        function pilihKelas(namaKelas) {
+            kelasDipilih = namaKelas;
+            document.getElementById('stepPilihKelas').classList.add('hidden');
+            document.getElementById('stepLogin').classList.remove('hidden');
+            document.getElementById('labelKelasTerpilih').textContent = namaKelas;
+
+            const selectNama = document.getElementById('nama');
+            selectNama.innerHTML = '<option value="" disabled selected>-- Memuat data siswa... --</option>';
+
+            fetch(`${SCRIPT_URL}?action=getSiswa&kelas=${encodeURIComponent(namaKelas)}`)
+                .then(res => res.json())
+                .then(res => {
+                    selectNama.innerHTML = '<option value="" disabled selected>-- Pilih Nama Anda --</option>';
+                    if (res.status === 'success' && res.data.length > 0) {
+                        databaseSiswa = res.data;
+                        res.data.forEach(siswa => {
+                            const opt = document.createElement('option');
+                            opt.value = siswa.nama;
+                            opt.textContent = siswa.nama;
+                            selectNama.appendChild(opt);
+                        });
+                    } else {
+                        selectNama.innerHTML = '<option value="" disabled selected>-- Tidak ada siswa ditemukan --</option>';
+                    }
+                })
+                .catch(err => {
+                    alert("Gagal memuat data siswa dari Google Spreadsheet!");
+                    selectNama.innerHTML = '<option value="" disabled selected>-- Gagal memuat data --</option>';
+                });
+        }
+
+        function kembaliKePilihKelas() {
+            document.getElementById('stepLogin').classList.add('hidden');
+            document.getElementById('stepPilihKelas').classList.remove('hidden');
+        }
+
+        // 2. PROSES LOGIN & CEK ABSENSI
+        document.getElementById('formLogin').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById('nama').value;
+            const tglLahir = document.getElementById('tglLahir').value.trim();
+            const valid = databaseSiswa.find(s => s.nama === nama && String(s.tglLahir).trim() === tglLahir);
+
+            if (!valid) {
+                document.getElementById('errorAlert').classList.remove('hidden');
+                return;
+            }
+
+            siswaAktif = nama;
+            document.getElementById('errorAlert').classList.add('hidden');
+            
+            document.getElementById('userBadge').innerHTML = `<i class="fa-solid fa-user-check"></i> ${nama}`;
+            document.getElementById('userBadge').classList.remove('hidden');
+            document.getElementById('userBadge').classList.add('flex');
+            document.getElementById('btnHeaderLogout').classList.remove('hidden');
+
+            const btnLogin = document.getElementById('btnLogin');
+            btnLogin.disabled = true;
+            btnLogin.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memeriksa Status Presensi...`;
+
+            fetch(`${SCRIPT_URL}?action=checkAbsen&nama=${encodeURIComponent(nama)}&tanggal=${getHariIni()}`)
+                .then(res => res.json())
+                .then(res => {
+                    btnLogin.disabled = false;
+                    btnLogin.innerHTML = `<i class="fa-solid fa-key"></i> Masuk Kelas`;
+
+                    if (res.sudahAbsen) {
+                        document.getElementById('stepLogin').classList.add('hidden');
+                        document.getElementById('textNoticeAbsen').textContent = `Status presensi Anda hari ini: ${res.status}. Selamat belajar!`;
+                        document.getElementById('stepPilihMapel').classList.remove('hidden');
+                    } else {
+                        document.getElementById('stepLogin').classList.add('hidden');
+                        document.getElementById('namaSiswaAbsen').textContent = siswaAktif;
+                        document.getElementById('stepAbsensi').classList.remove('hidden');
+                    }
+                })
+                .catch(() => {
+                    btnLogin.disabled = false;
+                    btnLogin.innerHTML = `<i class="fa-solid fa-key"></i> Masuk Kelas`;
+                    document.getElementById('stepLogin').classList.add('hidden');
+                    document.getElementById('namaSiswaAbsen').textContent = siswaAktif;
+                    document.getElementById('stepAbsensi').classList.remove('hidden');
+                });
+        });
+
+        // 3. SIMPAN PRESENSI KE SPREADSHEET
+        document.getElementById('formAbsensi').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const status = document.getElementById('statusKehadiran').value;
+            const btnKirim = document.getElementById('btnKirimAbsen');
+            
+            btnKirim.disabled = true;
+            btnKirim.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+
+            const payload = {
+                action: 'saveAbsen',
+                nama: siswaAktif,
+                kelas: kelasDipilih,
+                tanggal: getHariIni(),
+                status: status
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(res => {
+                btnKirim.disabled = false;
+                btnKirim.innerHTML = `<i class="fa-solid fa-clipboard-check"></i> Simpan Presensi & Lanjutkan`;
+
+                document.getElementById('stepAbsensi').classList.add('hidden');
+                document.getElementById('textNoticeAbsen').textContent = `Presensi berhasil disimpan: Status ${status}.`;
+                document.getElementById('stepPilihMapel').classList.remove('hidden');
+            })
+            .catch(err => {
+                btnKirim.disabled = false;
+                btnKirim.innerHTML = `<i class="fa-solid fa-clipboard-check"></i> Simpan Presensi & Lanjutkan`;
+                alert("Gagal menyimpan presensi. Silakan coba lagi.");
+            });
+        });
+
+        function pilihMapel(namaMapel) {
+            mapelDipilih = namaMapel;
+            document.getElementById('stepPilihMapel').classList.add('hidden');
+            document.getElementById('stepRuangKelas').classList.remove('hidden');
+
+            document.getElementById('namaRuangMapel').textContent = namaMapel;
+            document.getElementById('namaRuangKelas').textContent = kelasDipilih;
+
+            muatPertemuanLengkap(kelasDipilih, namaMapel);
+        }
+
+        // 4. MEMUAT DAFTAR PERTEMUAN, MATERI, SOAL & NILAI
+        function muatPertemuanLengkap(kelas, mapel) {
+            const containerList = document.getElementById('containerListPertemuan');
+            containerList.innerHTML = `<div class="text-xs text-slate-500 dark:text-emerald-300/70 flex items-center gap-2 py-4"><i class="fa-solid fa-spinner fa-spin text-emerald-600"></i> Memuat daftar pertemuan...</div>`;
+
+            const fetchUrl = `${SCRIPT_URL}?action=getPertemuanLengkap&kelas=${encodeURIComponent(kelas)}&mapel=${encodeURIComponent(mapel)}&nama=${encodeURIComponent(siswaAktif)}`;
+
+            fetch(fetchUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === "success" && data.pertemuan.length > 0) {
+                        daftarPertemuanAktif = data.pertemuan;
+                        renderSemuaPertemuan(daftarPertemuanAktif);
+                    } else {
+                        containerList.innerHTML = `<p class="text-xs text-slate-500 dark:text-emerald-300/70 py-4">Belum ada pertemuan yang tersedia untuk mata pelajaran ini.</p>`;
+                    }
+                })
+                .catch(err => {
+                    containerList.innerHTML = `<p class="text-xs text-red-500 py-4">Gagal memuat data pertemuan dari server.</p>`;
+                });
+        }
+
+        function renderSemuaPertemuan(listPertemuan) {
+            const containerList = document.getElementById('containerListPertemuan');
+            containerList.innerHTML = '';
+
+            listPertemuan.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'border border-emerald-200 dark:border-emerald-800 rounded-2xl overflow-hidden bg-white dark:bg-emerald-950/40 transition-all duration-300';
+                itemDiv.id = `pertemuanItem_${index}`;
+
+                const namaPertemuan = item.pertemuan || `Pertemuan ${index + 1}`;
+                const isCompleted = item.isCompleted || false;
+                
+                const nilaiSiswa = (item.nilai !== undefined && item.nilai !== null && item.nilai !== "") ? item.nilai : "Belum Dinilai";
+                const hasScore = nilaiSiswa !== "Belum Dinilai";
+
+                let soalHtml = '';
+                if (item.soal && item.soal.length > 0) {
+                    item.soal.forEach((s, idx) => {
+                        soalHtml += `
+                            <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-emerald-950/60 border border-slate-200 dark:border-emerald-800/60 mb-2">
+                                <div class="font-bold text-xs text-emerald-600 dark:text-emerald-400">Soal No. ${idx + 1}</div>
+                                <div class="text-xs font-medium text-slate-800 dark:text-emerald-100 mt-1 whitespace-pre-line leading-relaxed">${s.pertanyaan}</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    soalHtml = '<p class="text-xs text-slate-400 dark:text-emerald-300/50">Tidak ada soal uraian untuk pertemuan ini.</p>';
+                }
+
+                let youtubeHtml = '';
+                if (item.linkYoutube && item.linkYoutube.trim() !== "") {
+                    youtubeHtml = `
+                        <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 space-y-3">
+                            <div class="text-xs font-bold text-slate-900 dark:text-emerald-100 flex items-center gap-2">
+                                <i class="fa-brands fa-youtube text-red-600 text-base"></i> Video Pembelajaran (YouTube)
+                            </div>
+                            <div class="relative w-full pb-[56.25%] h-0 rounded-xl overflow-hidden border border-slate-200 dark:border-emerald-800">
+                                <iframe class="absolute top-0 left-0 w-full h-full border-0" src="${item.linkYoutube}" title="Video Pembelajaran" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                itemDiv.innerHTML = `
+                    <button type="button" class="w-full p-4 sm:p-5 bg-emerald-50/50 dark:bg-emerald-900/30 hover:bg-emerald-100/60 dark:hover:bg-emerald-800/40 font-bold text-slate-800 dark:text-emerald-100 transition flex items-center justify-between text-left gap-3" onclick="togglePertemuan(${index})">
+                        <span class="flex items-center gap-2 flex-wrap">
+                            <i class="fa-solid fa-folder-open text-emerald-600 dark:text-emerald-400"></i> 
+                            <span class="text-sm font-extrabold text-emerald-950 dark:text-emerald-50">${namaPertemuan}</span>
+                            <span id="tagStatus_${index}" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${isCompleted ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-200' : 'bg-slate-200 text-slate-700 dark:bg-emerald-950 dark:text-emerald-300'}">
+                                ${isCompleted ? '✓ Selesai' : 'Belum Selesai'}
+                            </span>
+                        </span>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span class="text-[11px] px-2.5 py-1 rounded-lg font-bold ${hasScore ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-200 border border-amber-300 dark:border-amber-700' : 'bg-slate-100 text-slate-600 dark:bg-emerald-950 dark:text-emerald-400'}">
+                                <i class="fa-solid fa-award mr-1"></i> ${hasScore ? 'Nilai: ' + nilaiSiswa : 'Belum Dinilai'}
+                            </span>
+                            <i id="chevron_${index}" class="fa-solid fa-chevron-right text-xs transition-transform duration-200"></i>
+                        </div>
+                    </button>
+                    
+                    <div id="contentBody_${index}" class="hidden p-4 sm:p-6 bg-white dark:bg-emerald-900/20 border-t border-emerald-100 dark:border-emerald-800/60 space-y-6">
+                        
+                        <!-- MATERI -->
+                        <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 space-y-3">
+                            <div class="text-xs font-bold text-slate-900 dark:text-emerald-100 flex items-center gap-2">
+                                <i class="fa-solid fa-book-open text-emerald-600 dark:text-emerald-400 text-base"></i> Materi Pembelajaran
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-emerald-200/80 leading-relaxed">${item.judul}</p>
+                            <a href="${item.linkEmbed}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl bg-emerald-100 dark:bg-emerald-800/60 text-emerald-800 dark:text-emerald-200 hover:bg-emerald-200 text-xs font-bold transition">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Materi di Tab Baru
+                            </a>
+                            <div class="w-full rounded-xl overflow-hidden border border-emerald-200 dark:border-emerald-800 shadow-inner">
+                                <iframe class="w-full h-80 sm:h-96 border-0" src="${item.linkEmbed}/preview" allow="autoplay"></iframe>
+                            </div>
+                        </div>
+
+                        ${youtubeHtml}
+
+                        <!-- SOAL -->
+                        <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 space-y-3">
+                            <div class="text-xs font-bold text-slate-900 dark:text-emerald-100 flex items-center gap-2">
+                                <i class="fa-solid fa-pen-to-square text-amber-500 text-base"></i> Lembar Soal
+                            </div>
+                            <p class="text-[11px] text-slate-500 dark:text-emerald-300/70">Jawablah pertanyaan di bawah ini pada buku catatan Anda:</p>
+                            <div>${soalHtml}</div>
+                        </div>
+
+                        <!-- UPLOAD TUGAS -->
+                        <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/50 border border-emerald-200/60 dark:border-emerald-800/60 space-y-3">
+                            <div class="text-xs font-bold text-slate-900 dark:text-emerald-100 flex items-center gap-2">
+                                <i class="fa-solid fa-cloud-arrow-up text-sky-600 text-base"></i> Pengumpulan Tugas
+                            </div>
+                            
+                            <div id="noticeSuccess_${index}" class="${isCompleted ? '' : 'hidden'} p-3 rounded-xl bg-teal-100 dark:bg-teal-950/60 border border-teal-300 dark:border-teal-700 text-teal-800 dark:text-teal-200 text-xs font-semibold flex items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-base"></i> Anda sudah berhasil mengirimkan tugas untuk ${namaPertemuan}.
+                            </div>
+
+                            <form onsubmit="kirimTugasPertemuan(event, ${index}, '${namaPertemuan}')" class="space-y-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 dark:text-emerald-200 mb-1.5">Unggah Foto / PDF Jawaban Uraian Anda</label>
+                                    <div onclick="document.getElementById('fileInput_${index}').click()" class="p-4 rounded-xl border-2 border-dashed border-emerald-300 dark:border-emerald-700 bg-white dark:bg-emerald-950/80 text-center cursor-pointer hover:border-emerald-500 transition">
+                                        <i class="fa-solid fa-file-arrow-up text-emerald-500 text-2xl mb-1"></i>
+                                        <p id="dropText_${index}" class="text-xs text-slate-500 dark:text-emerald-300/70">Klik untuk memilih file</p>
+                                        <div id="preview_${index}" class="mt-1 text-xs font-bold text-emerald-600 dark:text-emerald-400"></div>
+                                    </div>
+                                    <input type="file" id="fileInput_${index}" class="hidden" required onchange="updateFilePreview(this, ${index})">
+                                </div>
+
+                                <button type="submit" id="btnUpload_${index}" class="w-full py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i> Kirim Tugas ${namaPertemuan}
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                `;
+
+                containerList.appendChild(itemDiv);
+            });
+        }
+
+        function togglePertemuan(targetIndex) {
+            const currentBody = document.getElementById(`contentBody_${targetIndex}`);
+            const currentChevron = document.getElementById(`chevron_${targetIndex}`);
+            const isOpen = !currentBody.classList.contains('hidden');
+
+            document.querySelectorAll('[id^="contentBody_"]').forEach(b => b.classList.add('hidden'));
+            document.querySelectorAll('[id^="chevron_"]').forEach(c => c.classList.remove('rotate-90'));
+
+            if (!isOpen) {
+                currentBody.classList.remove('hidden');
+                currentChevron.classList.add('rotate-90');
+            }
+        }
+
+        function updateFilePreview(input, index) {
+            const preview = document.getElementById(`preview_${index}`);
+            if (input.files && input.files[0]) {
+                preview.textContent = "File terpilih: " + input.files[0].name;
+            } else {
+                preview.textContent = "";
+            }
+        }
+
+        // 5. MENGUNGGAH FILE DAN TUGAS KE SPREADSHEET & DRIVE
+        function kirimTugasPertemuan(e, index, namaPertemuan) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById(`fileInput_${index}`);
+            const btnUpload = document.getElementById(`btnUpload_${index}`);
+            const tagStatus = document.getElementById(`tagStatus_${index}`);
+            const noticeSuccess = document.getElementById(`noticeSuccess_${index}`);
+
+            if (!fileInput.files || !fileInput.files[0]) return;
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            btnUpload.disabled = true;
+            btnUpload.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengunggah File...`;
+
+            reader.onload = function(e) {
+                const rawBytes = e.target.result.split(',')[1];
+
+                const payload = {
+                    action: 'uploadTugas',
+                    nama: siswaAktif,
+                    kelas: kelasDipilih,
+                    mapel: mapelDipilih,
+                    pertemuan: namaPertemuan,
+                    fileName: file.name,
+                    mimeType: file.type,
+                    fileData: rawBytes
+                };
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(res => {
+                    btnUpload.disabled = false;
+                    btnUpload.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Ulang Tugas`;
+
+                    if (res.status === 'success') {
+                        tagStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-200';
+                        tagStatus.textContent = '✓ Selesai';
+                        noticeSuccess.classList.remove('hidden');
+
+                        alert(`Tugas ${namaPertemuan} berhasil diunggah ke Google Drive dan tersimpan di database!`);
+                    } else {
+                        alert("Gagal mengunggah tugas: " + res.message);
+                    }
+                })
+                .catch(err => {
+                    btnUpload.disabled = false;
+                    btnUpload.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Ulang Tugas`;
+                    alert("Terjadi kesalahan koneksi saat mengunggah file.");
+                });
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        function kembaliKePilihMapel() {
+            document.getElementById('stepRuangKelas').classList.add('hidden');
+            document.getElementById('stepPilihMapel').classList.remove('hidden');
+        }
+
+        function logout() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
