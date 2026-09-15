@@ -532,11 +532,18 @@
 
             listPertemuan.forEach((item, index) => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = 'border border-emerald-200 dark:border-emerald-800 rounded-2xl overflow-hidden bg-white dark:bg-emerald-950/40 transition-all duration-300';
+                const isCompleted = item.isCompleted || false;
+
+                // Penyesuaian Style Container berdasarkan status isCompleted
+                if (isCompleted) {
+                    itemDiv.className = 'border-2 border-teal-500 dark:border-teal-600 rounded-2xl overflow-hidden bg-teal-50/40 dark:bg-teal-950/30 transition-all duration-300';
+                } else {
+                    itemDiv.className = 'border border-emerald-200 dark:border-emerald-800 rounded-2xl overflow-hidden bg-white dark:bg-emerald-950/40 transition-all duration-300';
+                }
+
                 itemDiv.id = `pertemuanItem_${index}`;
 
                 const namaPertemuan = item.pertemuan || `Pertemuan ${index + 1}`;
-                const isCompleted = item.isCompleted || false;
                 
                 const nilaiSiswa = (item.nilai !== undefined && item.nilai !== null && item.nilai !== "") ? item.nilai : "Belum Dinilai";
                 const hasScore = nilaiSiswa !== "Belum Dinilai";
@@ -569,12 +576,19 @@
                     `;
                 }
 
+                // Penyesuaian Style Header Pertemuan berdasarkan status isCompleted
+                const btnHeaderClass = isCompleted
+                    ? 'bg-teal-100/70 dark:bg-teal-900/50 hover:bg-teal-200/70 dark:hover:bg-teal-800/60 text-teal-950 dark:text-teal-100'
+                    : 'bg-emerald-50/50 dark:bg-emerald-900/30 hover:bg-emerald-100/60 dark:hover:bg-emerald-800/40 text-slate-800 dark:text-emerald-100';
+
+                const iconClass = isCompleted ? 'fa-circle-check text-teal-600 dark:text-teal-400' : 'fa-folder-open text-emerald-600 dark:text-emerald-400';
+
                 itemDiv.innerHTML = `
-                    <button type="button" class="w-full p-4 sm:p-5 bg-emerald-50/50 dark:bg-emerald-900/30 hover:bg-emerald-100/60 dark:hover:bg-emerald-800/40 font-bold text-slate-800 dark:text-emerald-100 transition flex items-center justify-between text-left gap-3" onclick="togglePertemuan(${index})">
+                    <button type="button" class="w-full p-4 sm:p-5 ${btnHeaderClass} font-bold transition flex items-center justify-between text-left gap-3" onclick="togglePertemuan(${index})">
                         <span class="flex items-center gap-2 flex-wrap">
-                            <i class="fa-solid fa-folder-open text-emerald-600 dark:text-emerald-400"></i> 
-                            <span class="text-sm font-extrabold text-emerald-950 dark:text-emerald-50">${namaPertemuan}</span>
-                            <span id="tagStatus_${index}" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${isCompleted ? 'bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-200' : 'bg-slate-200 text-slate-700 dark:bg-emerald-950 dark:text-emerald-300'}">
+                            <i class="fa-solid ${iconClass}"></i> 
+                            <span class="text-sm font-extrabold">${namaPertemuan}</span>
+                            <span id="tagStatus_${index}" class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${isCompleted ? 'bg-teal-600 text-white dark:bg-teal-500 dark:text-slate-950' : 'bg-slate-200 text-slate-700 dark:bg-emerald-950 dark:text-emerald-300'}">
                                 ${isCompleted ? '✓ Selesai' : 'Belum Selesai'}
                             </span>
                         </span>
@@ -600,7 +614,7 @@
                             </a>
     
                              <div class="w-full rounded-xl overflow-hidden border border-emerald-200 dark:border-emerald-800 shadow-inner">
-                                <iframe class="w-full h-[500px] sm:h-[650px] border-0" src="${item.linkEmbed}/preview" allow="autoplay"></iframe>
+                                <iframe class="w-full h-[400px] sm:h-[650px] border-0" src="${item.linkEmbed}/preview" allow="autoplay"></iframe>
                             </div>
                         </div>
 
@@ -677,6 +691,7 @@
             const btnUpload = document.getElementById(`btnUpload_${index}`);
             const tagStatus = document.getElementById(`tagStatus_${index}`);
             const noticeSuccess = document.getElementById(`noticeSuccess_${index}`);
+            const itemContainer = document.getElementById(`pertemuanItem_${index}`);
 
             if (!fileInput.files || !fileInput.files[0]) return;
 
@@ -710,9 +725,19 @@
                     btnUpload.innerHTML = `<i class="fa-solid fa-paper-plane"></i> Kirim Ulang Tugas`;
 
                     if (res.status === 'success') {
-                        tagStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-teal-100 text-teal-800 dark:bg-teal-900/60 dark:text-teal-200';
+                        // Perbarui tampilan elemen secara langsung setelah berhasil upload
+                        tagStatus.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-teal-600 text-white dark:bg-teal-500 dark:text-slate-950';
                         tagStatus.textContent = '✓ Selesai';
                         noticeSuccess.classList.remove('hidden');
+
+                        // Ubah border dan background container utama menjadi status selesai
+                        itemContainer.className = 'border-2 border-teal-500 dark:border-teal-600 rounded-2xl overflow-hidden bg-teal-50/40 dark:bg-teal-950/30 transition-all duration-300';
+                        
+                        // Ubah styling button header
+                        const headerBtn = itemContainer.querySelector('button');
+                        if (headerBtn) {
+                            headerBtn.className = 'w-full p-4 sm:p-5 bg-teal-100/70 dark:bg-teal-900/50 hover:bg-teal-200/70 dark:hover:bg-teal-800/60 text-teal-950 dark:text-teal-100 font-bold transition flex items-center justify-between text-left gap-3';
+                        }
 
                         alert(`Tugas ${namaPertemuan} berhasil diunggah ke Google Drive dan tersimpan di database!`);
                     } else {
