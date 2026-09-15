@@ -71,13 +71,13 @@
                     <i class="fa-solid fa-user-check"></i> <span id="userNameText"></span>
                 </div>
 
-                <!-- Tombol Kembali ke Dashboard (Merah - Semirip Tombol Keluar) -->
-                <a id="btnKembaliDashboard" href="https://pkbmbd.github.io/dashboard/" class="px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
+                <!-- Tombol Kembali ke Dashboard -->
+                <button type="button" id="btnKembaliDashboard" onclick="bukaKonfirmasiDashboard()" class="px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
                     <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Kembali ke</span> Dashboard
-                </a>
+                </button>
                 
                 <!-- Tombol Keluar (Muncul Setelah Login) -->
-                <button id="btnHeaderLogout" onclick="logout()" class="hidden px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
+                <button id="btnHeaderLogout" onclick="bukaKonfirmasiLogout()" class="hidden px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800/60 hover:bg-red-600 hover:text-white text-xs font-bold transition flex items-center gap-1.5">
                     <i class="fa-solid fa-right-from-bracket"></i> Keluar
                 </button>
             </div>
@@ -260,6 +260,31 @@
 
     </main>
 
+    <!-- MODAL POPUP KONFIRMASI MENGAMBANG (BATAL DI KIRI | YA, KELUAR DI KANAN) -->
+    <div id="modalKonfirmasi" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 transition-all duration-300">
+        <div class="bg-white dark:bg-emerald-900 border border-emerald-200 dark:border-emerald-800 rounded-3xl p-6 sm:p-8 max-w-sm w-full shadow-2xl text-center space-y-6 transform scale-100 transition-all">
+            <div id="konfirmasiIcon" class="w-16 h-16 rounded-2xl bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center text-3xl mx-auto shadow-inner">
+                <i class="fa-solid fa-circle-question"></i>
+            </div>
+            
+            <div class="space-y-2">
+                <h3 id="konfirmasiJudul" class="text-xl font-black text-emerald-950 dark:text-emerald-50">Konfirmasi Keluar</h3>
+                <p id="konfirmasiPesan" class="text-xs text-slate-600 dark:text-emerald-200/80 leading-relaxed">Apakah Anda yakin ingin keluar?</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <!-- BATAL (KIRI) -->
+                <button type="button" onclick="tutupModalKonfirmasi()" class="w-full py-2.5 px-4 rounded-xl bg-slate-200 dark:bg-emerald-800/60 hover:bg-slate-300 dark:hover:bg-emerald-800 text-slate-800 dark:text-emerald-100 font-bold text-xs transition">
+                    Batal
+                </button>
+                <!-- YA, KELUAR (KANAN) -->
+                <button id="btnAksiKonfirmasi" class="w-full py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg shadow-red-600/30 transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-right-from-bracket"></i> Ya, Keluar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="border-t border-emerald-200 dark:border-emerald-800/60 py-6 text-center text-xs text-emerald-700 dark:text-emerald-400">
         <p>&copy; 2026 Sibela Class System - PKBM Bahtera Dua Kota Blitar. All rights reserved.</p>
@@ -309,6 +334,35 @@
             return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
         }
 
+        // FUNGSI JENDELA MENGAMBANG (MODAL KONFIRMASI)
+        function bukaKonfirmasiDashboard() {
+            document.getElementById('konfirmasiJudul').textContent = "Kembali ke Dashboard?";
+            document.getElementById('konfirmasiPesan').textContent = "Apakah Anda yakin ingin keluar dari Sibela Digital dan kembali ke Halaman Dashboard Utama?";
+            
+            const btnAksi = document.getElementById('btnAksiKonfirmasi');
+            btnAksi.onclick = function() {
+                window.location.href = "https://pkbmbd.github.io/dashboard/";
+            };
+
+            document.getElementById('modalKonfirmasi').classList.remove('hidden');
+        }
+
+        function bukaKonfirmasiLogout() {
+            document.getElementById('konfirmasiJudul').textContent = "Keluar dari Kelas Online?";
+            document.getElementById('konfirmasiPesan').textContent = "Apakah Anda yakin ingin keluar dari sesi kelas online saat ini?";
+            
+            const btnAksi = document.getElementById('btnAksiKonfirmasi');
+            btnAksi.onclick = function() {
+                location.reload();
+            };
+
+            document.getElementById('modalKonfirmasi').classList.remove('hidden');
+        }
+
+        function tutupModalKonfirmasi() {
+            document.getElementById('modalKonfirmasi').classList.add('hidden');
+        }
+
         // MEMUAT DATA SISWA & MENYEMBUNYIKAN TOMBOL KEMBALI KE DASHBOARD
         function pilihKelas(namaKelas) {
             kelasDipilih = namaKelas;
@@ -316,7 +370,6 @@
             document.getElementById('stepLogin').classList.remove('hidden');
             document.getElementById('labelKelasTerpilih').textContent = namaKelas;
 
-            // SEMBUNYIKAN TOMBOL KEMBALI KE DASHBOARD & STATUS BELUM LOGIN
             document.getElementById('btnKembaliDashboard').classList.add('hidden');
             document.getElementById('badgeBelumLogin').classList.add('hidden');
 
@@ -349,7 +402,6 @@
             document.getElementById('stepLogin').classList.add('hidden');
             document.getElementById('stepPilihKelas').classList.remove('hidden');
 
-            // TAMPILKAN KEMBALI TOMBOL DASHBOARD JIKA KEMBALI KE BERANDA AWAL
             document.getElementById('btnKembaliDashboard').classList.remove('hidden');
             document.getElementById('badgeBelumLogin').classList.remove('hidden');
         }
@@ -680,10 +732,6 @@
         function kembaliKePilihMapel() {
             document.getElementById('stepRuangKelas').classList.add('hidden');
             document.getElementById('stepPilihMapel').classList.remove('hidden');
-        }
-
-        function logout() {
-            location.reload();
         }
     </script>
 </body>
